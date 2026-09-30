@@ -3,6 +3,7 @@ import type {
     AnswerQuestionRequest,
     ChatDetail,
     ChatSummary,
+    LoginMethod,
     ConfigCheckResult,
     MeResponse,
     ModelOption,
@@ -84,7 +85,9 @@ function segment(value: string): string {
 /** Typed client for the add-on REST API. All URLs are relative to support ingress. */
 export const api = {
     me: () => request<MeResponse>('GET', 'api/me'),
-    startLogin: () => request<AccountState>('POST', 'api/account/login'),
+    startLogin: (method: LoginMethod) => request<AccountState>('POST', 'api/account/login', { method }),
+    completeBrowserLogin: (callbackUrl: string) =>
+        request<AccountState>('POST', 'api/account/login/callback', { callbackUrl }),
     cancelLogin: () => request<AccountState>('POST', 'api/account/login/cancel'),
     logout: () => request<AccountState>('POST', 'api/account/logout'),
     models: () => request<ModelOption[]>('GET', 'api/models'),

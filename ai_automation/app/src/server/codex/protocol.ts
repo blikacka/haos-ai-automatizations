@@ -78,6 +78,13 @@ export interface DeviceCodeLoginResponse {
     userCode: string
 }
 
+/** Response of `account/login/start` with `{ type: 'chatgpt' }` (browser OAuth flow). */
+export interface BrowserLoginResponse {
+    type: 'chatgpt'
+    loginId: string
+    authUrl: string
+}
+
 /** Notification `account/login/completed`. */
 export interface AccountLoginCompletedNotification {
     loginId: string | null

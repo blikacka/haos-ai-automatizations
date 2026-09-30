@@ -48,6 +48,22 @@ přímo v obrazu doplňku. Na Home Assistant OS nemusíte nic dalšího instalov
 4. Po potvrzení se stránka sama přepne do chatu. Přihlášení si doplněk pamatuje
    a každý uživatel Home Assistantu má své vlastní, oddělené od ostatních.
 
+### Přihlášení přes prohlížeč (když kód zařízení nejde)
+
+Některé pracovní prostory ChatGPT (Business / Enterprise) mají ověřování kódem zařízení
+zakázané – stránka OpenAI pak hlásí „Kontaktuj správce pracovního prostoru, aby povolil
+ověřování pomocí kódů zařízení“. Buď požádejte správce o povolení, nebo zvolte
+**Přihlásit se přes prohlížeč**:
+
+1. Otevřete přihlašovací stránku OpenAI a přihlaste se.
+2. Prohlížeč se poté pokusí otevřít adresu `http://localhost:1455/auth/callback?code=…`
+   a zobrazí chybu „Nelze se připojit“ – to je v pořádku.
+3. Zkopírujte celou tuto adresu z adresního řádku a vložte ji do doplňku.
+
+Doplněk z adresy předá Codexu jen jednorázový kód a kontrolní údaj (`state`); kód je
+chráněný PKCE a platí jen pro toto jedno přihlášení. Současně se přes prohlížeč může
+přihlašovat jen jeden uživatel.
+
 Odhlásit se můžete kdykoli v nabídce svého účtu v horní liště doplňku.
 
 ## Jak doplněk chrání vaši konfiguraci

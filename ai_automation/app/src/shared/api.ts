@@ -14,7 +14,23 @@ export interface CurrentUser {
 export type AccountState =
     | { status: 'loggedOut' }
     | { status: 'pendingLogin', loginId: string, verificationUrl: string, userCode: string }
+    | { status: 'pendingBrowserLogin', loginId: string, authUrl: string }
     | { status: 'loggedIn', email: string | null, planType: string | null }
+
+/**
+ * How the user logs in: `deviceCode` (one-time code entered at OpenAI) or `browser`
+ * (OAuth in the browser; the final localhost callback address is pasted back into the add-on).
+ */
+export type LoginMethod = 'deviceCode' | 'browser'
+
+export interface StartLoginRequest {
+    method: LoginMethod
+}
+
+export interface CompleteBrowserLoginRequest {
+    /** Full address from the browser address bar after login (http://localhost:1455/auth/callback?code=…&state=…). */
+    callbackUrl: string
+}
 
 export interface MeResponse {
     user: CurrentUser

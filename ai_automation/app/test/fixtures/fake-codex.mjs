@@ -4,7 +4,8 @@
  * Protocol: newline-delimited JSON-RPC over stdio without the "jsonrpc" field, like the real app-server.
  *
  * Supported: initialize, account/read (logged out until a login completes; persisted in
- * $CODEX_HOME/fake-auth.json), account/login/start {type:'chatgptDeviceCode'} (completes after
+ * $CODEX_HOME/fake-auth.json), account/login/start {type:'chatgpt'} (browser OAuth, see
+ * fake-codex-browser.mjs) or {type:'chatgptDeviceCode'} (completes after
  * FAKE_CODEX_LOGIN_DELAY_MS, default 1500 ms), account/login/cancel, account/logout, model/list
  * (one model per page unless `limit` is given), thread/start, thread/resume, turn/start, turn/interrupt.
  *
@@ -23,6 +24,7 @@ import { join } from 'node:path'
 import { createInterface } from 'node:readline'
 import { randomUUID } from 'node:crypto'
 import { configureTurns, runTurn, turnObject } from './fake-codex-turn.mjs'
+import { startFakeBrowserLogin } from './fake-codex-browser.mjs'
 
 const LOGIN_DELAY_MS = Number(process.env.FAKE_CODEX_LOGIN_DELAY_MS ?? 1500)
 const CODEX_HOME = process.env.CODEX_HOME ?? process.cwd()
@@ -71,20 +73,33 @@ function accountRead() {
     return { account: auth === null ? null : { type: 'chatgpt', email: auth.email, planType: auth.planType }, requiresOpenaiAuth: true }
 }
 
-function loginStart(params) {
-    if (params?.type !== 'chatgptDeviceCode') {
-        throw rpcError(-32602, 'Only chatgptDeviceCode is supported by the fake')
-    }
+function completeLogin(loginId) {
+    pendingLogin = null
+    writeFileSync(AUTH_FILE, JSON.stringify({ email: 'fake.user@example.com', planType: 'plus' }), { mode: 0o600 })
+    notify('account/login/completed', { loginId, success: true, error: null, onboardingEntrypoint: null })
+    notify('account/updated', { authMode: 'chatgpt', planType: 'plus' })
+}
+
+function clearPendingLogin() {
     if (pendingLogin !== null) {
         clearTimeout(pendingLogin.timer)
-    }
-    const loginId = newId()
-    const timer = setTimeout(() => {
+        pendingLogin.close?.()
         pendingLogin = null
-        writeFileSync(AUTH_FILE, JSON.stringify({ email: 'fake.user@example.com', planType: 'plus' }), { mode: 0o600 })
-        notify('account/login/completed', { loginId, success: true, error: null, onboardingEntrypoint: null })
-        notify('account/updated', { authMode: 'chatgpt', planType: 'plus' })
-    }, LOGIN_DELAY_MS)
+    }
+}
+
+async function loginStart(params) {
+    clearPendingLogin()
+    const loginId = newId()
+    if (params?.type === 'chatgpt') {
+        const browser = await startFakeBrowserLogin({ onSuccess: () => completeLogin(loginId) })
+        pendingLogin = { loginId, timer: undefined, close: browser.close }
+        return { type: 'chatgpt', loginId, authUrl: browser.authUrl }
+    }
+    if (params?.type !== 'chatgptDeviceCode') {
+        throw rpcError(-32602, 'Only chatgpt and chatgptDeviceCode are supported by the fake')
+    }
+    const timer = setTimeout(() => completeLogin(loginId), LOGIN_DELAY_MS)
     pendingLogin = { loginId, timer }
     return { type: 'chatgptDeviceCode', loginId, verificationUrl: 'https://auth.openai.com/codex/device', userCode: 'ABCD-1234' }
 }
@@ -93,8 +108,7 @@ function loginCancel(params) {
     if (pendingLogin === null || pendingLogin.loginId !== params?.loginId) {
         return { status: 'notFound' }
     }
-    clearTimeout(pendingLogin.timer)
-    pendingLogin = null
+    clearPendingLogin()
     return { status: 'canceled' }
 }
 

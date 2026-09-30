@@ -1,14 +1,25 @@
 import type {
     AccountState,
+    LoginMethod,
     ServerEvent,
 } from '../../shared/api.js'
 import { logger } from '../util/logger.js'
 import {
     CODEX_METHODS,
     type AccountLoginCompletedNotification,
-    type DeviceCodeLoginResponse,
     type GetAccountResponse,
 } from './protocol.js'
+import {
+    BrowserLoginError,
+    buildForwardUrl,
+    callbackTarget,
+    forwardCallback,
+} from './browserLogin.js'
+import {
+    type PendingLogin,
+    startBrowserLogin,
+    startDeviceCodeLogin,
+} from './loginStarters.js'
 import { SHORT_REQUEST_TIMEOUT_MS } from './rpcClient.js'
 
 /** Publishes server events to one user's browsers (satisfied by EventHub). */
@@ -29,10 +40,14 @@ export interface AccountSessionPool {
     on(event: 'session', listener: (userId: string, session: AccountSession) => void): unknown
 }
 
-type PendingLogin = Extract<AccountState, { status: 'pendingLogin' }>
 
 /** Device codes expire; a pending login is forgotten after this time. */
 const PENDING_LOGIN_TTL_MS = 15 * 60 * 1000
+/** How long to wait for Codex to confirm a forwarded browser callback. */
+const BROWSER_COMPLETION_WAIT_MS = 10_000
+const BROWSER_COMPLETION_POLL_MS = 500
+
+const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms))
 
 /**
  * Converts the `account/read` response into the UI account state.
@@ -84,34 +99,66 @@ export class AccountService {
     }
 
     /**
-     * Starts the device code login (or returns the running one / the logged-in state).
+     * Starts a login (or returns the running one / the logged-in state).
      *
      * @param userId HA user id
-     * @returns pendingLogin state with the verification URL and user code
+     * @param method `deviceCode` (default) or `browser`
+     * @returns pending login state with the code or the browser authorization URL
+     * @throws BrowserLoginError when another user's browser login occupies the callback port
      */
-    public async startLogin(userId: string): Promise<AccountState> {
+    public async startLogin(userId: string, method: LoginMethod = 'deviceCode'): Promise<AccountState> {
         const current = await this.getAccount(userId)
-        if (current.status !== 'loggedOut') {
+        if (current.status === 'loggedIn') {
             return current
         }
+        if (current.status !== 'loggedOut') {
+            if (this.methodOf(current) === method) {
+                return current
+            }
+            await this.cancelPending(userId)
+        }
+        if (method === 'browser' && this.hasOtherBrowserLogin(userId)) {
+            throw new BrowserLoginError('Právě se přihlašuje jiný uživatel. Zkuste to prosím za chvíli.')
+        }
         const session = await this.sessionFor(userId)
-        const response = await session.request<DeviceCodeLoginResponse>(
-            CODEX_METHODS.loginStart,
-            { type: 'chatgptDeviceCode' },
-            SHORT_REQUEST_TIMEOUT_MS,
-        )
-        if (response?.type !== 'chatgptDeviceCode' || typeof response.loginId !== 'string') {
-            throw new Error('Unexpected login response from Codex')
-        }
-        const pending: PendingLogin = {
-            status: 'pendingLogin',
-            loginId: response.loginId,
-            verificationUrl: response.verificationUrl,
-            userCode: response.userCode,
-        }
+        const pending = method === 'browser' ? await startBrowserLogin(session) : await startDeviceCodeLogin(session)
         this.setPending(userId, pending)
-        logger.info('Codex device code login started')
+        logger.info('Codex login started', { method })
         return pending
+    }
+
+    /**
+     * Completes a browser login with the callback address pasted by the user.
+     *
+     * @param userId HA user id
+     * @param callbackUrl address from the browser address bar after the OpenAI login
+     * @returns resulting account state
+     * @throws BrowserLoginError on invalid input or when Codex rejects the callback
+     */
+    public async completeBrowserLogin(userId: string, callbackUrl: string): Promise<AccountState> {
+        const pending = this.pendingLogins.get(userId)
+        if (pending?.status !== 'pendingBrowserLogin') {
+            throw new BrowserLoginError('Přihlášení přes prohlížeč neprobíhá. Začněte prosím znovu.')
+        }
+        await forwardCallback(buildForwardUrl(callbackTarget(pending.authUrl), callbackUrl))
+        for (let waited = 0; waited < BROWSER_COMPLETION_WAIT_MS; waited += BROWSER_COMPLETION_POLL_MS) {
+            const account = await this.readAccount(userId)
+            if (account.status === 'loggedIn') {
+                this.clearPending(userId)
+                return account
+            }
+            await sleep(BROWSER_COMPLETION_POLL_MS)
+        }
+        return this.getAccount(userId)
+    }
+
+    private hasOtherBrowserLogin(userId: string): boolean {
+        return [...this.pendingLogins.entries()]
+            .some(([otherId, state]) => otherId !== userId && state.status === 'pendingBrowserLogin')
+    }
+
+    private methodOf(state: PendingLogin): LoginMethod {
+        return state.status === 'pendingBrowserLogin' ? 'browser' : 'deviceCode'
     }
 
     /**

@@ -12,6 +12,10 @@ import { icon } from '../icons'
 import { robotMascot } from '../robot'
 import { store } from '../state'
 import { copyText } from '../util/clipboard'
+import {
+    alternativeLogin,
+    browserPendingContent,
+} from './loginBrowser'
 import { safeHttpUrl } from '../util/url'
 
 type PendingAccount = Extract<AccountState, { status: 'pendingLogin' }>
@@ -26,6 +30,7 @@ function loggedOutContent(busy: boolean): Node[] {
             busy ? h('span', { className: 'spinner spinner-small', attrs: { 'aria-hidden': 'true' } }) : icon('user'),
             busy ? 'Připravuji přihlášení…' : 'Přihlásit se přes ChatGPT',
         ], { disabled: busy }),
+        alternativeLogin('browser'),
     ]
 }
 
@@ -68,17 +73,28 @@ function pendingContent(account: PendingAccount): Node[] {
                 ),
             ),
         ),
+        alternativeLogin('browser'),
     ]
 }
 
+function contentFor(account: AccountState, busy: boolean): Node[] {
+    if (account.status === 'pendingLogin') {
+        return pendingContent(account)
+    }
+    if (account.status === 'pendingBrowserLogin') {
+        return browserPendingContent(account, busy)
+    }
+    return loggedOutContent(busy)
+}
+
 /**
- * Login screen for the ChatGPT device-code flow.
+ * Login screen: ChatGPT device-code flow or browser OAuth flow with pasted callback address.
  */
 export function createLoginView(): HTMLElement {
     const card = h('div', 'login-card')
     store.watch((state) => [state.account, state.loginBusy, state.loginError], () => {
         const { account, loginBusy, loginError } = store.get()
-        const content = account.status === 'pendingLogin' ? pendingContent(account) : loggedOutContent(loginBusy)
+        const content = contentFor(account, loginBusy)
         replaceContent(card,
             robotMascot('robot robot-hero', 'Robot AI automatizace'),
             loginError ? h('div', { className: 'card card-error login-error', attrs: { role: 'alert' } },

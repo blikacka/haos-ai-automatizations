@@ -1,5 +1,6 @@
 import type {
     AccountState,
+    LoginMethod,
     UserSettings,
 } from '../../shared/api'
 import {
@@ -58,7 +59,8 @@ export function applyAccount(account: AccountState): void {
         }
         return
     }
-    const loginFailed = account.status === 'loggedOut' && previous.status === 'pendingLogin' && !cancelRequested
+    const wasPending = previous.status === 'pendingLogin' || previous.status === 'pendingBrowserLogin'
+    const loginFailed = account.status === 'loggedOut' && wasPending && !cancelRequested
     store.set({
         account,
         phase: 'login',
@@ -82,14 +84,36 @@ export async function refreshAccount(): Promise<void> {
     }
 }
 
-/** Starts the ChatGPT device-code login. */
-export async function startLogin(): Promise<void> {
-    cancelRequested = false
+/**
+ * Starts the ChatGPT login.
+ *
+ * @param method `deviceCode` (one-time code) or `browser` (OAuth, callback address pasted back)
+ */
+export async function startLogin(method: LoginMethod = 'deviceCode'): Promise<void> {
+    cancelRequested = true
     store.set({ loginBusy: true, loginError: null })
     try {
-        applyAccount(await api.startLogin())
+        applyAccount(await api.startLogin(method))
     } catch (error) {
         store.set({ loginBusy: false, loginError: errorMessage(error) })
+    } finally {
+        cancelRequested = false
+    }
+}
+
+/**
+ * Finishes the browser login with the address copied from the browser address bar.
+ *
+ * @param callbackUrl pasted address (http://localhost:1455/auth/callback?code=…)
+ */
+export async function completeBrowserLogin(callbackUrl: string): Promise<void> {
+    store.set({ loginBusy: true, loginError: null })
+    try {
+        applyAccount(await api.completeBrowserLogin(callbackUrl))
+    } catch (error) {
+        store.set({ loginError: errorMessage(error) })
+    } finally {
+        store.set({ loginBusy: false })
     }
 }
 

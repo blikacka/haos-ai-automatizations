@@ -14,8 +14,8 @@ import {
 } from './router.js'
 
 const INDEX_FILE = 'index.html'
-const ASSET_CACHE_CONTROL = 'public, max-age=3600'
-const INDEX_CACHE_CONTROL = 'no-cache'
+/** Always revalidate (ETag) so browsers pick up new UI files right after an add-on update. */
+const CACHE_CONTROL = 'no-cache'
 
 const CONTENT_TYPES: Readonly<Record<string, string>> = {
     '.html': 'text/html; charset=utf-8',
@@ -121,11 +121,17 @@ export class StaticFiles {
 
     private async sendFile(req: IncomingMessage, res: ServerResponse, filePath: string): Promise<void> {
         const info = await stat(filePath)
-        const isIndex = path.basename(filePath) === INDEX_FILE
+        const etag = `W/"${info.size.toString(16)}-${Math.trunc(info.mtimeMs).toString(16)}"`
+        res.setHeader('Cache-Control', CACHE_CONTROL)
+        res.setHeader('ETag', etag)
+        if (req.headers['if-none-match'] === etag) {
+            res.statusCode = 304
+            res.end()
+            return
+        }
         res.statusCode = 200
         res.setHeader('Content-Type', contentTypeFor(filePath))
         res.setHeader('Content-Length', info.size)
-        res.setHeader('Cache-Control', isIndex ? INDEX_CACHE_CONTROL : ASSET_CACHE_CONTROL)
         if (req.method === 'HEAD') {
             res.end()
             return
