@@ -1,0 +1,16 @@
+{
+    "name": "ai-automation-devtools",
+    "version": "0.1.0",
+    "private": true,
+    "description": "Local dev harness: mock Supervisor/HA Core and ingress proxy for the AI automatizace add-on",
+    "type": "module",
+    "scripts": {
+        "mock": "node mock-supervisor.mjs",
+        "proxy": "node ingress-proxy.mjs",
+        "test": "node test-mock.mjs",
+        "dev": "bash dev.sh"
+    },
+    "dependencies": {
+        "yaml": "^2.5.0"
+    }
+}

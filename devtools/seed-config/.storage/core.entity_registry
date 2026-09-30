@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "minor_version": 16,
+  "key": "core.entity_registry",
+  "data": {
+    "entities": [
+      {
+        "entity_id": "light.kotelna_zarovka",
+        "id": "reg_light_kotelna_zarovka",
+        "unique_id": "shelly1-kotelna-relay-0",
+        "platform": "shelly",
+        "device_id": "dev_kotelna_zarovka",
+        "area_id": "kotelna",
+        "config_entry_id": "entry_shelly",
+        "original_name": "Žárovka kotelna",
+        "name": null,
+        "icon": null,
+        "disabled_by": null,
+        "hidden_by": null,
+        "entity_category": null,
+        "labels": [],
+        "options": {}
+      },
+      {
+        "entity_id": "binary_sensor.vchodove_dvere",
+        "id": "reg_binary_sensor_vchodove_dvere",
+        "unique_id": "0x00158d0004a21abc-contact",
+        "platform": "zha",
+        "device_id": "dev_vchodove_dvere",
+        "area_id": null,
+        "config_entry_id": "entry_zha",
+        "original_name": "Vchodové dveře",
+        "name": null,
+        "icon": null,
+        "disabled_by": null,
+        "hidden_by": null,
+        "entity_category": null,
+        "labels": [],
+        "options": {}
+      }
+    ],
+    "deleted_entities": []
+  }
+}

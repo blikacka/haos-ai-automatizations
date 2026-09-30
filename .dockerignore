@@ -1,0 +1,7 @@
+.secrets
+tmp
+.remember
+.claude
+**/node_modules
+**/dist
+devdata

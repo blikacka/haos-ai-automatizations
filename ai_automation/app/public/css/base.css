@@ -1,0 +1,193 @@
+:root {
+    --accent: #03a9f4;
+    --accent-strong: #0288d1;
+    --accent-soft: rgba(3, 169, 244, 0.12);
+    --accent-ink: #ffffff;
+    --ground: #eef2f6;
+    --surface: #ffffff;
+    --surface-2: #f6f8fb;
+    --surface-3: #e9eef4;
+    --ink: #16212c;
+    --ink-2: #4c5a68;
+    --ink-3: #7b8896;
+    --line: #dce3ea;
+    --success: #1e9655;
+    --success-soft: #e5f5ec;
+    --warning: #c77000;
+    --warning-soft: #fff3e0;
+    --danger: #d23f3f;
+    --danger-soft: #fdecec;
+    --diff-add: #e6f6ea;
+    --diff-add-ink: #1a6b37;
+    --diff-del: #fdecec;
+    --diff-del-ink: #a12a2a;
+    --shadow-1: 0 1px 2px rgba(16, 33, 52, 0.06), 0 1px 3px rgba(16, 33, 52, 0.08);
+    --shadow-2: 0 8px 28px rgba(16, 33, 52, 0.16);
+    --radius-card: 12px;
+    --radius-control: 10px;
+    --radius-bubble: 18px;
+    --font: Roboto, 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+    --mono: 'Roboto Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, 'Liberation Mono', monospace;
+    --sidebar-width: 292px;
+    --focus-ring: 0 0 0 3px rgba(3, 169, 244, 0.45);
+    color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --accent: #29b6f6;
+        --accent-strong: #4fc3f7;
+        --accent-soft: rgba(41, 182, 246, 0.16);
+        --accent-ink: #04202e;
+        --ground: #0f161d;
+        --surface: #17212a;
+        --surface-2: #1c2832;
+        --surface-3: #24323e;
+        --ink: #e4ecf3;
+        --ink-2: #a3b2c0;
+        --ink-3: #74848f;
+        --line: #2a3844;
+        --success: #4cc27f;
+        --success-soft: rgba(76, 194, 127, 0.14);
+        --warning: #f0a33a;
+        --warning-soft: rgba(240, 163, 58, 0.14);
+        --danger: #f07070;
+        --danger-soft: rgba(240, 112, 112, 0.14);
+        --diff-add: rgba(76, 194, 127, 0.14);
+        --diff-add-ink: #8fe0b0;
+        --diff-del: rgba(240, 112, 112, 0.14);
+        --diff-del-ink: #f5a3a3;
+        --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.35);
+        --shadow-2: 0 10px 32px rgba(0, 0, 0, 0.5);
+        color-scheme: dark;
+    }
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--font);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
+}
+
+#app {
+    height: 100%;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    margin: 0;
+}
+
+a {
+    color: var(--accent-strong);
+}
+
+code,
+pre,
+kbd {
+    font-family: var(--mono);
+}
+
+:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+.muted {
+    color: var(--ink-3);
+    font-weight: 400;
+}
+
+.icon {
+    flex: none;
+    width: 20px;
+    height: 20px;
+}
+
+.center-fill {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+    list-style: none;
+}
+
+.full-screen {
+    min-height: 100%;
+}
+
+.spinner {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    border: 3px solid var(--accent-soft);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    flex: none;
+}
+
+.spinner-small {
+    width: 16px;
+    height: 16px;
+    border-width: 2px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Robot mascot */
+.robot { flex: none; }
+.robot-head { fill: var(--accent); }
+.robot-ear,
+.robot-neck { fill: var(--accent-strong); }
+.robot-face { fill: #eaf7fe; }
+.robot-eye { fill: #0b3a52; }
+.robot-mouth { fill: none; stroke: #0b3a52; stroke-width: 2.6; stroke-linecap: round; }
+.robot-line { stroke: var(--accent-strong); stroke-width: 2.6; stroke-linecap: round; }
+.robot-accent { fill: #ffca28; }
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

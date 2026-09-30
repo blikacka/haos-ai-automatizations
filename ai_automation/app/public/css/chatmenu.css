@@ -1,0 +1,125 @@
+.popover-menu {
+    position: absolute;
+    z-index: 10;
+    top: calc(100% - 4px);
+    right: 4px;
+    display: flex;
+    flex-direction: column;
+    min-width: 170px;
+    padding: 6px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: var(--surface);
+    box-shadow: var(--shadow-2);
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border: none;
+    border-radius: 8px;
+    background: none;
+    color: var(--ink);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.menu-item:hover { background: var(--surface-2); }
+.menu-item.is-danger { color: var(--danger); }
+
+.chat-item-form,
+.chat-item-confirm {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 4px;
+    padding: 6px;
+}
+
+.chat-item-confirm {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    border-radius: var(--radius-control);
+    background: var(--danger-soft);
+    font-size: 14px;
+}
+
+.chat-item-confirm-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    padding: 4px;
+    border-radius: var(--radius-control);
+    background: var(--surface-2);
+}
+
+.tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 36px;
+    border: none;
+    border-radius: 8px;
+    background: none;
+    color: var(--ink-2);
+    font: inherit;
+    font-size: 13.5px;
+    cursor: pointer;
+}
+
+.tab .icon { width: 18px; height: 18px; }
+
+.tab[aria-pressed='true'] {
+    background: var(--surface);
+    box-shadow: var(--shadow-1);
+    color: var(--ink);
+    font-weight: 500;
+}
+
+.sidebar-account {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 4px 0 6px;
+    border-top: 1px solid var(--line);
+    padding-top: 12px;
+}
+
+.account-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+}
+
+.account-text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    font-size: 13.5px;
+    line-height: 1.35;
+}
+
+.account-name { font-weight: 500; }
+
+.account-email {
+    overflow: hidden;
+    color: var(--ink-3);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

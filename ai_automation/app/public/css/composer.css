@@ -1,0 +1,90 @@
+/* Composer */
+.composer-wrap {
+    padding: 0 24px 16px;
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+}
+
+.composer {
+    max-width: 772px;
+    margin: 0 auto;
+}
+
+.composer-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 6px 8px;
+    color: var(--ink-2);
+    font-size: 14px;
+}
+
+.composer-status:not(.is-busy) .spinner { display: none; }
+
+.composer-box {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    padding: 8px 8px 8px 16px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--surface);
+    box-shadow: var(--shadow-1);
+}
+
+.composer-box:focus-within {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.composer-input {
+    flex: 1;
+    min-height: 40px;
+    max-height: 40vh;
+    padding: 8px 0;
+    border: none;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    line-height: 1.5;
+    resize: none;
+}
+
+.composer-input:focus { outline: none; box-shadow: none; }
+
+.composer-send {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 12px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    cursor: pointer;
+}
+
+.composer-send:disabled {
+    background: var(--surface-3);
+    color: var(--ink-3);
+    cursor: not-allowed;
+}
+
+.composer-stop { min-height: 40px; }
+
+.composer-hint {
+    padding: 6px 6px 0;
+    color: var(--ink-3);
+    font-size: 12.5px;
+}
+
+@media (max-width: 799px) {
+    .chat-column { padding: 16px 14px 12px; }
+    .composer-wrap { padding-inline: 10px; }
+    .example-grid { grid-template-columns: minmax(0, 1fr); }
+    .composer-hint { display: none; }
+    .composer-stop-label { display: none; }
+    .composer-stop { padding-inline: 10px; }
+    .snapshot-chip { margin-left: 0; }
+}

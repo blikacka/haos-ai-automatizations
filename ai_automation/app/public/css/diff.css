@@ -1,0 +1,65 @@
+.diff {
+    margin: 4px 6px 10px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-control);
+    background: var(--surface);
+}
+
+.diff-body {
+    max-height: 480px;
+    overflow: auto;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.55;
+}
+
+.diff-line {
+    display: grid;
+    grid-template-columns: 3.4em 3.4em 1.4em max-content;
+    min-width: 100%;
+    width: max-content;
+}
+
+.diff-num {
+    padding: 0 8px;
+    color: var(--ink-3);
+    text-align: right;
+    user-select: none;
+    background: var(--surface-2);
+}
+
+.diff-sign {
+    text-align: center;
+    user-select: none;
+}
+
+.diff-text {
+    padding-right: 16px;
+    white-space: pre;
+}
+
+.diff-add { background: var(--diff-add); color: var(--diff-add-ink); }
+.diff-del { background: var(--diff-del); color: var(--diff-del-ink); }
+.diff-add .diff-num,
+.diff-del .diff-num { background: transparent; }
+
+.diff-hunk {
+    background: var(--accent-soft);
+    color: var(--ink-2);
+}
+
+.diff-hunk .diff-num { background: transparent; }
+.diff-meta { color: var(--ink-3); font-style: italic; }
+
+.diff-more {
+    width: 100%;
+    border-top: 1px solid var(--line);
+    border-radius: 0;
+}
+
+.diff-empty {
+    padding: 8px 12px;
+    color: var(--ink-3);
+    font-size: 14px;
+}

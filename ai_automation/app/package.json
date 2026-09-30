@@ -1,0 +1,31 @@
+{
+    "name": "ai-automation-addon",
+    "version": "0.1.1",
+    "private": true,
+    "description": "Home Assistant add-on: AI automations powered by OpenAI Codex",
+    "type": "module",
+    "engines": {
+        "node": ">=20"
+    },
+    "scripts": {
+        "build": "npm run build:server && npm run build:web",
+        "build:server": "tsc -p tsconfig.server.json",
+        "build:web": "node scripts/build-web.mjs",
+        "typecheck": "tsc -p tsconfig.server.json --noEmit && tsc -p tsconfig.web.json --noEmit",
+        "lint": "eslint src",
+        "test": "npm run build:server && node --test --experimental-strip-types \"test/**/*.test.ts\" \"test/**/*.test.mjs\"",
+        "start": "node dist/server/main.js"
+    },
+    "dependencies": {
+        "ws": "^8.18.0"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.12.0",
+        "@types/node": "^22.7.0",
+        "@types/ws": "^8.5.12",
+        "esbuild": "^0.24.0",
+        "eslint": "^9.12.0",
+        "typescript": "^5.6.0",
+        "typescript-eslint": "^8.8.0"
+    }
+}

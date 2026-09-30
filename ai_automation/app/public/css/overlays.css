@@ -1,0 +1,109 @@
+.modal-backdrop {
+    position: fixed;
+    z-index: 50;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: rgba(8, 18, 28, 0.5);
+    animation: fade-in 0.15s ease;
+}
+
+.modal-backdrop.is-leaving { opacity: 0; transition: opacity 0.15s; }
+
+.modal {
+    width: 100%;
+    max-width: 460px;
+    padding: 24px;
+    border-radius: 16px;
+    background: var(--surface);
+    box-shadow: var(--shadow-2);
+    animation: rise 0.18s ease;
+}
+
+.modal-title {
+    font-size: 19px;
+    font-weight: 500;
+}
+
+.modal-body {
+    margin-top: 10px;
+    color: var(--ink-2);
+}
+
+.modal-body p + p {
+    margin-top: 8px;
+}
+
+.modal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 22px;
+}
+
+.toast-region {
+    position: fixed;
+    z-index: 60;
+    right: 16px;
+    bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: min(380px, calc(100vw - 32px));
+    pointer-events: none;
+}
+
+.toast {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 8px 12px 14px;
+    border-left: 4px solid var(--accent);
+    border-radius: var(--radius-card);
+    background: var(--surface);
+    box-shadow: var(--shadow-2);
+    pointer-events: auto;
+    animation: rise 0.2s ease;
+}
+
+.toast.is-leaving { opacity: 0; transform: translateY(6px); transition: opacity 0.2s, transform 0.2s; }
+.toast-success { border-left-color: var(--success); }
+.toast-error { border-left-color: var(--danger); }
+.toast-warning { border-left-color: var(--warning); }
+
+.toast-icon { display: flex; padding-top: 1px; color: var(--accent); }
+.toast-success .toast-icon { color: var(--success); }
+.toast-error .toast-icon { color: var(--danger); }
+.toast-warning .toast-icon { color: var(--warning); }
+
+.toast-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    min-width: 0;
+}
+
+.toast-message {
+    color: var(--ink-2);
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+
+.toast-close { width: 30px; height: 30px; }
+
+@keyframes fade-in {
+    from { opacity: 0; }
+}
+
+@keyframes rise {
+    from { opacity: 0; transform: translateY(8px); }
+}
+
+@media (max-width: 799px) {
+    .toast-region { right: 16px; left: 16px; width: auto; bottom: max(16px, env(safe-area-inset-bottom)); }
+}

@@ -1,0 +1,10 @@
+# Legacy build configuration, kept only for Supervisor versions older than
+# 2026.04.0. Newer Supervisors ignore this file and use the default of the
+# BUILD_FROM argument declared in the Dockerfile (multi-arch base image).
+build_from:
+  amd64: ghcr.io/home-assistant/amd64-base:3.22
+  aarch64: ghcr.io/home-assistant/aarch64-base:3.22
+labels:
+  org.opencontainers.image.title: AI automatizace
+  org.opencontainers.image.description: AI assistant for Home Assistant configuration powered by OpenAI Codex
+  org.opencontainers.image.licenses: MIT

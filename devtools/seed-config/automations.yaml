@@ -1,0 +1,23 @@
+- id: '1727712000000'
+  alias: Rozsvítit chodbu při otevření dveří
+  description: Po setmění rozsvítí světlo na chodbě, když se otevřou vchodové dveře, a po 3 minutách ho zhasne.
+  mode: restart
+  triggers:
+    - trigger: state
+      entity_id: binary_sensor.vchodove_dvere
+      to: 'on'
+  conditions:
+    - condition: state
+      entity_id: sun.sun
+      state: below_horizon
+  actions:
+    - action: light.turn_on
+      target:
+        entity_id: light.chodba
+      data:
+        brightness_pct: 80
+    - delay:
+        minutes: 3
+    - action: light.turn_off
+      target:
+        entity_id: light.chodba

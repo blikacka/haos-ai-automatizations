@@ -1,0 +1,48 @@
+name: AI automatizace
+version: "0.1.1"
+slug: ai_automation
+url: https://github.com/blikacka/haos-ai-automatizations
+description: >-
+  Chatujte s AI (OpenAI Codex přes váš ChatGPT účet), která za vás upraví
+  konfiguraci Home Assistantu – vždy se zálohou, ověřením a historií verzí.
+arch:
+  - amd64
+  - aarch64
+init: false
+startup: application
+boot: auto
+ingress: true
+ingress_port: 8099
+ingress_stream: true
+panel_icon: mdi:robot
+panel_title: AI automatizace
+panel_admin: true
+watchdog: "http://[HOST]:[PORT:8099]/api/health"
+homeassistant_api: true
+hassio_api: true
+hassio_role: admin
+auth_api: true
+usb: true
+uart: true
+udev: true
+journald: true
+map:
+  - type: homeassistant_config
+    read_only: false
+    path: /homeassistant
+  - type: share
+    read_only: false
+  - type: ssl
+    read_only: true
+  - type: backup
+    read_only: false
+  - type: media
+    read_only: true
+options:
+  default_model: ""
+  default_reasoning: medium
+  log_level: info
+schema:
+  default_model: "str?"
+  default_reasoning: "list(minimal|low|medium|high|xhigh)"
+  log_level: "list(debug|info|warning|error)"

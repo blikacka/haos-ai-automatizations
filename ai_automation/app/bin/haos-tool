@@ -1,0 +1,6 @@
+#!/bin/sh
+# Wrapper that puts the compiled haos-tool CLI on PATH for Codex.
+set -eu
+scriptPath="$(readlink -f "$0")"
+appDir="$(dirname "$(dirname "$scriptPath")")"
+exec node "$appDir/dist/tool/haos-tool.js" "$@"

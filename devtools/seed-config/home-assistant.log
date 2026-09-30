@@ -1,0 +1,2 @@
+2026-09-30 20:00:00.000 INFO (MainThread) [homeassistant.bootstrap] Home Assistant initialized in 12.34s
+2026-09-30 20:05:12.345 WARNING (MainThread) [homeassistant.components.zha] Device battery low

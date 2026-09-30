@@ -1,0 +1,14 @@
+configuration:
+  default_model:
+    name: Default model
+    description: >-
+      Codex model used for new chats (for example gpt-5.1-codex). Leave empty
+      to use the default model of the logged-in ChatGPT account.
+  default_reasoning:
+    name: Default reasoning effort
+    description: >-
+      How much the model thinks before answering. Higher values are slower but
+      more thorough.
+  log_level:
+    name: Log level
+    description: Verbosity of the add-on log.

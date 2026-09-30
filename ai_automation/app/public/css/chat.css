@@ -1,0 +1,214 @@
+.chat-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scroll-padding-bottom: 24px;
+}
+
+.chat-column {
+    width: 100%;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 24px 24px 16px;
+}
+
+.message-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.msg {
+    display: flex;
+    gap: 12px;
+    min-width: 0;
+}
+
+.msg-user {
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.bubble {
+    min-width: 0;
+    max-width: min(100%, 680px);
+    overflow-wrap: anywhere;
+}
+
+.bubble-user {
+    padding: 10px 16px;
+    border-radius: var(--radius-bubble) var(--radius-bubble) 6px var(--radius-bubble);
+    background: var(--accent);
+    color: var(--accent-ink);
+    white-space: pre-wrap;
+}
+
+.bubble-assistant {
+    flex: 1;
+    padding-top: 4px;
+}
+
+.avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+}
+
+.robot-avatar {
+    width: 28px;
+    height: 28px;
+}
+
+.msg-assistant.is-streaming .robot-antenna {
+    animation: blink 1s ease-in-out infinite;
+}
+
+@keyframes blink {
+    50% { fill: var(--accent); }
+}
+
+.caret {
+    display: inline-block;
+    width: 8px;
+    height: 1.05em;
+    margin-left: 3px;
+    border-radius: 2px;
+    background: var(--accent);
+    vertical-align: -0.15em;
+    animation: caret 1s steps(2, start) infinite;
+}
+
+@keyframes caret {
+    to { visibility: hidden; }
+}
+
+.typing {
+    display: inline-flex;
+    gap: 5px;
+    padding: 10px 0;
+}
+
+.typing span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ink-3);
+    animation: typing 1.2s ease-in-out infinite;
+}
+
+.typing span:nth-child(2) { animation-delay: 0.15s; }
+.typing span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes typing {
+    30% { transform: translateY(-4px); opacity: 0.5; }
+}
+
+.snapshot-chip {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
+    margin-left: 48px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: var(--surface-3);
+    color: var(--ink-2);
+    font-size: 13px;
+}
+
+.snapshot-chip .icon { width: 16px; height: 16px; }
+
+/* Empty chat */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5vh 0 16px;
+    text-align: center;
+}
+
+.robot-hero {
+    width: 88px;
+    height: 88px;
+    margin-bottom: 16px;
+}
+
+.robot-hero .robot-eye {
+    transform-origin: center;
+    transform-box: fill-box;
+    animation: robot-blink 5s ease-in-out infinite;
+}
+
+@keyframes robot-blink {
+    0%, 92%, 100% { transform: scaleY(1); }
+    95% { transform: scaleY(0.1); }
+}
+
+.empty-greeting {
+    color: var(--ink-2);
+}
+
+.empty-title {
+    margin: 4px 0 8px;
+    font-size: clamp(26px, 4vw, 34px);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+}
+
+.empty-lead {
+    max-width: 52ch;
+    color: var(--ink-2);
+}
+
+.example-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    width: 100%;
+    margin-top: 28px;
+}
+
+.example-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: var(--surface);
+    color: var(--ink);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.example-card:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-1);
+}
+
+.example-icon {
+    display: flex;
+    padding: 6px;
+    border-radius: 8px;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+}
+
+.empty-reassurance {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+    color: var(--success);
+    font-size: 14px;
+}

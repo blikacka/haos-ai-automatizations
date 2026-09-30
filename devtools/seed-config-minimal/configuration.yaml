@@ -1,0 +1,16 @@
+# Minimal installation: no automations.yaml include, no packages, automations defined inline.
+default_config:
+
+homeassistant:
+  name: Chata
+
+automation:
+  - id: 'chata_1'
+    alias: Zapnout čerpadlo ráno
+    triggers:
+      - trigger: time
+        at: '06:30:00'
+    actions:
+      - action: switch.turn_on
+        target:
+          entity_id: switch.kotelna_cerpadlo

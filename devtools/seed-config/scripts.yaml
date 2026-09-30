@@ -1,0 +1,13 @@
+zhasnout_vse:
+  alias: Zhasnout všechna světla
+  description: Zhasne všechna světla v domě.
+  icon: mdi:lightbulb-group-off
+  mode: single
+  sequence:
+    - action: light.turn_off
+      target:
+        entity_id:
+          - light.kotelna_zarovka
+          - light.obyvak_strop
+          - light.kuchyn_linka
+          - light.chodba

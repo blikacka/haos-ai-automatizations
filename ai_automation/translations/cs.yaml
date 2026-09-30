@@ -1,0 +1,14 @@
+configuration:
+  default_model:
+    name: Výchozí model
+    description: >-
+      Model Codexu pro nové konverzace (například gpt-5.1-codex). Ponechte
+      prázdné pro výchozí model přihlášeného účtu ChatGPT.
+  default_reasoning:
+    name: Výchozí míra přemýšlení
+    description: >-
+      Jak moc model přemýšlí před odpovědí. Vyšší hodnoty jsou pomalejší, ale
+      důkladnější.
+  log_level:
+    name: Úroveň logování
+    description: Podrobnost výpisů v logu doplňku.
