@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.3
+
+- Soubory rozhraní mají v adrese otisk obsahu (`?v=…`), takže se po aktualizaci vždy načte nová verze.
+- Styly jsou sloučené do jednoho souboru.
+
 ## 0.1.2
 
 - Nové přihlášení přes prohlížeč (OAuth) pro pracovní prostory, které nepovolují kódy zařízení.
